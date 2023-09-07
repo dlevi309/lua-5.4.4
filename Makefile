@@ -3,6 +3,9 @@ AR := ar
 OBJDIR := obj
 SRCDIR := src
 
+SIGN := ldid -Sent.xml
+STRIP := strip -rSx
+
 PROGS := luac lua
 LIBS := liblua.a
 
@@ -12,9 +15,13 @@ all: $(LIBS) $(PROGS)
 
 luac: $(OBJDIR)/luac.o liblua.a
 	$(CC) $(CFLAGS) -o $@ $(filter-out liblua.a,$^) -L. -llua
+	$(STRIP) $@
+	$(SIGN) $@
 
 lua: $(OBJDIR)/lua.o liblua.a
 	$(CC) $(CFLAGS) -o $@ $(filter-out liblua.a,$^) -L. -llua
+	$(STRIP) $@
+	$(SIGN) $@
 
 liblua.a: $(LIB_OBJS)
 	$(AR) -rcs $@ $^
